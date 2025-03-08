@@ -14,6 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/notifications', 'NotificationsController@index');
+Route::get('/notifications/pending', 'NotificationsController@IndexPending');
+Route::get('/notifications/sent', 'NotificationsController@IndexSent');
+Route::get('/notifications/failed', 'NotificationsController@IndexFailed');
+
+Route::post('/notifications', 'NotificationsController@store');
+
+Route::get('/notifications/{id}', 'NotificationsController@show');
+Route::patch('/notifications/{id}', 'NotificationsController@update');
+Route::delete('/notifications/{id}', 'NotificationsController@destroy');
+
+Route::get('/notifications/{email}', 'NotificationsController@ShowUser');
+Route::get('/notifications/{email}/pending', 'NotificationsController@ShowUserPending');
+Route::get('/notifications/{email}/sent', 'NotificationsController@ShowUserSent');
+Route::get('/notifications/{email}/failed', 'NotificationsController@ShowUserFailed');

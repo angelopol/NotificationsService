@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title', 500);
             $table->text('content');
-            $table->string('destinatary');
-            $table->state('state')->default('pending');
+            $table->string('email', 500);
+            $table->string('action', 500)->default('Go to mercly');
+            $table->text('url')->default('/');
+            $table->string('status')->default('pending');
             $table->default('try')->default(0);
             $table->timestamps();
         });

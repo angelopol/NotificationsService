@@ -1,66 +1,156 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# General Notifications Service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+This application is a general notifications service built with Laravel. It provides an API to manage notifications, including creating, updating, deleting, and retrieving notifications. The notifications can be filtered by their status (pending, sent, failed) and by user email.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## API Structure
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The API provides the following endpoints:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- `GET /notifications`: Retrieve all notifications.
+- `GET /notifications/pending`: Retrieve all pending notifications.
+- `GET /notifications/sent`: Retrieve all sent notifications.
+- `GET /notifications/failed`: Retrieve all failed notifications.
+- `POST /notifications`: Create a new notification.
+- `GET /notifications/{id}`: Retrieve a specific notification by ID.
+- `PATCH /notifications/{id}`: Update a specific notification by ID.
+- `DELETE /notifications/{id}`: Delete a specific notification by ID.
+- `GET /notifications/{email}`: Retrieve all notifications for a specific user by email.
+- `GET /notifications/{email}/pending`: Retrieve all pending notifications for a specific user by email.
+- `GET /notifications/{email}/sent`: Retrieve all sent notifications for a specific user by email.
+- `GET /notifications/{email}/failed`: Retrieve all failed notifications for a specific user by email.
 
-## Learning Laravel
+## Model Structure
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The `Notification` model represents a notification in the database. The corresponding database table has the following structure:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- `id`: The primary key of the notification.
+- `title`: The title of the notification (string, max 500 characters).
+- `content`: The content of the notification (text).
+- `email`: The email address of the recipient (string, max 500 characters).
+- `action`: The action associated with the notification (string, max 500 characters, default: 'Go to mercly').
+- `url`: The URL associated with the action (text, default: '/').
+- `status`: The status of the notification (string, default: 'pending').
+- `try`: The number of attempts to send the notification (integer, default: 0).
+- `created_at`: The timestamp when the notification was created.
+- `updated_at`: The timestamp when the notification was last updated.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Examples of API Requests
 
-## Laravel Sponsors
+### Retrieve All Notifications
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```sh
+curl -X GET http://localhost:8080/api/notifications
+```
 
-### Premium Partners
+### Retrieve Pending Notifications
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```sh
+curl -X GET http://localhost:8080/api/notifications/pending
+```
 
-## Contributing
+### Retrieve Sent Notifications
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```sh
+curl -X GET http://localhost:8080/api/notifications/sent
+```
 
-## Code of Conduct
+### Retrieve Failed Notifications
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```sh
+curl -X GET http://localhost:8080/api/notifications/failed
+```
 
-## Security Vulnerabilities
+### Create a New Notification
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```sh
+curl -X POST http://localhost:8080/api/notifications \
+    -H "Content-Type: application/json" \
+    -d '{
+        "title": "New Notification",
+        "content": "This is the content of the notification.",
+        "email": "user@example.com",
+        "action": "View Notification",
+        "url": "http://example.com/notification"
+    }'
+```
 
-## License
+### Retrieve a Specific Notification by ID
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```sh
+curl -X GET http://localhost:8080/api/notifications/1
+```
+
+### Update a Specific Notification by ID
+
+```sh
+curl -X PATCH http://localhost:8080/api/notifications/1 \
+    -H "Content-Type: application/json" \
+    -d '{
+        "title": "Updated Notification",
+        "content": "This is the updated content of the notification."
+    }'
+```
+
+### Delete a Specific Notification by ID
+
+```sh
+curl -X DELETE http://localhost:8080/api/notifications/1
+```
+
+### Retrieve Notifications for a Specific User by Email
+
+```sh
+curl -X GET http://localhost:8080/api/notifications/user@example.com
+```
+
+### Retrieve Pending Notifications for a Specific User by Email
+
+```sh
+curl -X GET http://localhost:8080/api/notifications/user@example.com/pending
+```
+
+### Retrieve Sent Notifications for a Specific User by Email
+
+```sh
+curl -X GET http://localhost:8080/api/notifications/user@example.com/sent
+```
+
+### Retrieve Failed Notifications for a Specific User by Email
+
+```sh
+curl -X GET http://localhost:8080/api/notifications/user@example.com/failed
+```
+
+## Other Important Information
+
+### Notification Sending
+
+The application uses Laravel's notification system to send notifications via email. The `GenericNotification` class is used to define the content and behavior of the notifications.
+
+### Database Migrations
+
+The database schema for the notifications is defined in the migration file `2025_03_08_160621_create_notifications_table.php`. This file contains the necessary code to create and drop the `notifications` table.
+
+### Docker Setup
+
+The application is containerized using Docker. The `docker-compose.yml` file defines the services required to run the application, including the Laravel application and a MySQL database. The `deploy/Dockerfile` file defines the build process for the Laravel application container.
+
+### Running the Application
+
+To run the application, use the following commands:
+
+```sh
+docker-compose up -d
+```
+
+This will start the Laravel application and the MySQL database in Docker containers.
+
+### Environment Variables
+
+The application uses environment variables to configure various settings. These variables are defined in the `.env` file. Make sure to set the appropriate values for your environment.
+
+## Conclusion
+
+This README provides an overview of the general notifications service, including its API structure, model structure, examples of API requests, and other important information. Use this document as a reference to understand and interact with the application.
