@@ -17,9 +17,9 @@ return new class extends Migration
             $table->text('content');
             $table->string('email', 500);
             $table->string('action', 500)->default('Go to mercly');
-            $table->text('url')->default('/');
+            $table->string('url', 500)->default('/');
             $table->string('status')->default('pending');
-            $table->default('try')->default(0);
+            $table->integer('try')->default(0);
             $table->timestamps();
         });
     }

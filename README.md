@@ -150,7 +150,3 @@ This will start the Laravel application and the MySQL database in Docker contain
 ### Environment Variables
 
 The application uses environment variables to configure various settings. These variables are defined in the `.env` file. Make sure to set the appropriate values for your environment.
-
-## Conclusion
-
-This README provides an overview of the general notifications service, including its API structure, model structure, examples of API requests, and other important information. Use this document as a reference to understand and interact with the application.
