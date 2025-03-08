@@ -21,6 +21,15 @@ class NotificationsController extends Controller
         ]);
         return $validated;
     }
+
+    private function SendNotification($notification){
+        try {
+            Notification::route('mail', $notification->email)->notify(new GenericNotification($notification));
+        } catch (\Exception $e) {
+            $notification->status = 'failed';
+            $notification->save();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -76,11 +85,8 @@ class NotificationsController extends Controller
     {
         $validated = $this->ValidateNotification($request);
         $notification = NotificationModel::create($validated);
-        $notify = Notification::route('mail', $notification->email)->notify(new GenericNotification($notification));
-        if (!$notify) {
-            $notification->status = 'failed';
-            $notification->save();
-        }
+        $this->SendNotification($notification);
+
         return response()->json($notification, 201);
     }
 
@@ -105,13 +111,11 @@ class NotificationsController extends Controller
         if (!$notification) {
             return response()->json(['message' => 'Notification not found'], 404);
         }
+        
         $validated = $this->ValidateNotification($request);
         $notification->update($validated);
-        $notify = Notification::route('mail', $notification->email)->notify(new GenericNotification($notification));
-        if (!$notify) {
-            $notification->status = 'failed';
-            $notification->save();
-        }
+        $this->SendNotification($notification);
+        
         return response()->json($notification, 200);
     }
 

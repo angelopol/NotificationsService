@@ -1,31 +1,20 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationsController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::get('/notifications', [NotificationsController::class, 'index']);
+Route::get('/notifications/pending', [NotificationsController::class, 'IndexPending']);
+Route::get('/notifications/sent', [NotificationsController::class, 'IndexSent']);
+Route::get('/notifications/failed', [NotificationsController::class, 'IndexFailed']);
 
-Route::get('/notifications', 'NotificationsController@index');
-Route::get('/notifications/pending', 'NotificationsController@IndexPending');
-Route::get('/notifications/sent', 'NotificationsController@IndexSent');
-Route::get('/notifications/failed', 'NotificationsController@IndexFailed');
+Route::post('/notifications', [NotificationsController::class, 'store']);
 
-Route::post('/notifications', 'NotificationsController@store');
+Route::get('/notifications/{id}', [NotificationsController::class, 'show']);
+Route::patch('/notifications/{id}', [NotificationsController::class, 'update']);
+Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
 
-Route::get('/notifications/{id}', 'NotificationsController@show');
-Route::patch('/notifications/{id}', 'NotificationsController@update');
-Route::delete('/notifications/{id}', 'NotificationsController@destroy');
-
-Route::get('/notifications/{email}', 'NotificationsController@ShowUser');
-Route::get('/notifications/{email}/pending', 'NotificationsController@ShowUserPending');
-Route::get('/notifications/{email}/sent', 'NotificationsController@ShowUserSent');
-Route::get('/notifications/{email}/failed', 'NotificationsController@ShowUserFailed');
+Route::get('/notifications/user/{email}', [NotificationsController::class, 'ShowUser']);
+Route::get('/notifications/user/{email}/pending', [NotificationsController::class, 'ShowUserPending']);
+Route::get('/notifications/user/{email}/sent', [NotificationsController::class, 'ShowUserSent']);
+Route::get('/notifications/user/{email}/failed', [NotificationsController::class, 'ShowUserFailed']);
